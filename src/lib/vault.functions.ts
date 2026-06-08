@@ -5,7 +5,7 @@ import { xpToLevel, levelToRank, XP_REWARDS } from "@/lib/levels";
 
 // ---------- XP helper ----------
 async function awardXp(
-  supabase: Awaited<ReturnType<typeof getSupabase>>,
+  supabase: any,
   userId: string,
   source: keyof typeof XP_REWARDS,
   extra: Partial<Record<"mysteries_solved" | "rabbit_holes_explored" | "secret_files_unlocked" | "reality_checks_completed", number>> = {},
@@ -33,10 +33,6 @@ async function awardXp(
     })
     .eq("id", userId);
 }
-
-// helper for typing
-type SbCtx = { supabase: unknown; userId: string };
-async function getSupabase(): Promise<never> { throw new Error("typing only"); }
 
 // ---------- DAILY LOGIN / STREAK ----------
 export const recordDailyLogin = createServerFn({ method: "POST" })
