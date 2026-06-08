@@ -14,7 +14,195 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      mysteries: {
+        Row: {
+          accused_suspect: string | null
+          case_file: Json
+          category: string
+          conversation: Json
+          created_at: string
+          id: string
+          solution_revealed: Json | null
+          solved_correctly: boolean | null
+          status: string
+          title: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          accused_suspect?: string | null
+          case_file: Json
+          category: string
+          conversation?: Json
+          created_at?: string
+          id?: string
+          solution_revealed?: Json | null
+          solved_correctly?: boolean | null
+          status?: string
+          title: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          accused_suspect?: string | null
+          case_file?: Json
+          category?: string
+          conversation?: Json
+          created_at?: string
+          id?: string
+          solution_revealed?: Json | null
+          solved_correctly?: boolean | null
+          status?: string
+          title?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          avatar_url: string | null
+          codename: string | null
+          created_at: string
+          display_name: string | null
+          id: string
+          interests: string[]
+          last_active_date: string | null
+          level: number
+          mysteries_solved: number
+          rabbit_holes_explored: number
+          rank: string
+          reality_checks_completed: number
+          secret_files_unlocked: number
+          streak: number
+          updated_at: string
+          xp: number
+        }
+        Insert: {
+          avatar_url?: string | null
+          codename?: string | null
+          created_at?: string
+          display_name?: string | null
+          id: string
+          interests?: string[]
+          last_active_date?: string | null
+          level?: number
+          mysteries_solved?: number
+          rabbit_holes_explored?: number
+          rank?: string
+          reality_checks_completed?: number
+          secret_files_unlocked?: number
+          streak?: number
+          updated_at?: string
+          xp?: number
+        }
+        Update: {
+          avatar_url?: string | null
+          codename?: string | null
+          created_at?: string
+          display_name?: string | null
+          id?: string
+          interests?: string[]
+          last_active_date?: string | null
+          level?: number
+          mysteries_solved?: number
+          rabbit_holes_explored?: number
+          rank?: string
+          reality_checks_completed?: number
+          secret_files_unlocked?: number
+          streak?: number
+          updated_at?: string
+          xp?: number
+        }
+        Relationships: []
+      }
+      rabbit_holes: {
+        Row: {
+          created_at: string
+          id: string
+          nodes: Json
+          root_question: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          nodes?: Json
+          root_question: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          nodes?: Json
+          root_question?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      secret_files: {
+        Row: {
+          category: string
+          created_at: string
+          deep_explanation: string
+          id: string
+          rabbit_hole_links: string[]
+          related_concepts: string[]
+          summary: string
+          topic: string
+          user_id: string
+        }
+        Insert: {
+          category: string
+          created_at?: string
+          deep_explanation: string
+          id?: string
+          rabbit_hole_links?: string[]
+          related_concepts?: string[]
+          summary: string
+          topic: string
+          user_id: string
+        }
+        Update: {
+          category?: string
+          created_at?: string
+          deep_explanation?: string
+          id?: string
+          rabbit_hole_links?: string[]
+          related_concepts?: string[]
+          summary?: string
+          topic?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      xp_events: {
+        Row: {
+          amount: number
+          created_at: string
+          id: string
+          source: string
+          user_id: string
+        }
+        Insert: {
+          amount: number
+          created_at?: string
+          id?: string
+          source: string
+          user_id: string
+        }
+        Update: {
+          amount?: number
+          created_at?: string
+          id?: string
+          source?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
