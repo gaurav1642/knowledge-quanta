@@ -9,38 +9,153 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as AuthRouteImport } from './routes/auth'
+import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AuthenticatedVaultRouteImport } from './routes/_authenticated/vault'
+import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
+import { Route as AuthenticatedRabbitHoleIndexRouteImport } from './routes/_authenticated/rabbit-hole.index'
+import { Route as AuthenticatedMysteriesIndexRouteImport } from './routes/_authenticated/mysteries.index'
+import { Route as AuthenticatedRabbitHoleIdRouteImport } from './routes/_authenticated/rabbit-hole.$id'
+import { Route as AuthenticatedMysteriesIdRouteImport } from './routes/_authenticated/mysteries.$id'
 
+const AuthRoute = AuthRouteImport.update({
+  id: '/auth',
+  path: '/auth',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
+  id: '/_authenticated',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedVaultRoute = AuthenticatedVaultRouteImport.update({
+  id: '/vault',
+  path: '/vault',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedRabbitHoleIndexRoute =
+  AuthenticatedRabbitHoleIndexRouteImport.update({
+    id: '/rabbit-hole/',
+    path: '/rabbit-hole/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedMysteriesIndexRoute =
+  AuthenticatedMysteriesIndexRouteImport.update({
+    id: '/mysteries/',
+    path: '/mysteries/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedRabbitHoleIdRoute =
+  AuthenticatedRabbitHoleIdRouteImport.update({
+    id: '/rabbit-hole/$id',
+    path: '/rabbit-hole/$id',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedMysteriesIdRoute =
+  AuthenticatedMysteriesIdRouteImport.update({
+    id: '/mysteries/$id',
+    path: '/mysteries/$id',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/auth': typeof AuthRoute
+  '/dashboard': typeof AuthenticatedDashboardRoute
+  '/vault': typeof AuthenticatedVaultRoute
+  '/mysteries/$id': typeof AuthenticatedMysteriesIdRoute
+  '/rabbit-hole/$id': typeof AuthenticatedRabbitHoleIdRoute
+  '/mysteries/': typeof AuthenticatedMysteriesIndexRoute
+  '/rabbit-hole/': typeof AuthenticatedRabbitHoleIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/auth': typeof AuthRoute
+  '/dashboard': typeof AuthenticatedDashboardRoute
+  '/vault': typeof AuthenticatedVaultRoute
+  '/mysteries/$id': typeof AuthenticatedMysteriesIdRoute
+  '/rabbit-hole/$id': typeof AuthenticatedRabbitHoleIdRoute
+  '/mysteries': typeof AuthenticatedMysteriesIndexRoute
+  '/rabbit-hole': typeof AuthenticatedRabbitHoleIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
+  '/auth': typeof AuthRoute
+  '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
+  '/_authenticated/vault': typeof AuthenticatedVaultRoute
+  '/_authenticated/mysteries/$id': typeof AuthenticatedMysteriesIdRoute
+  '/_authenticated/rabbit-hole/$id': typeof AuthenticatedRabbitHoleIdRoute
+  '/_authenticated/mysteries/': typeof AuthenticatedMysteriesIndexRoute
+  '/_authenticated/rabbit-hole/': typeof AuthenticatedRabbitHoleIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/auth'
+    | '/dashboard'
+    | '/vault'
+    | '/mysteries/$id'
+    | '/rabbit-hole/$id'
+    | '/mysteries/'
+    | '/rabbit-hole/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/auth'
+    | '/dashboard'
+    | '/vault'
+    | '/mysteries/$id'
+    | '/rabbit-hole/$id'
+    | '/mysteries'
+    | '/rabbit-hole'
+  id:
+    | '__root__'
+    | '/'
+    | '/_authenticated'
+    | '/auth'
+    | '/_authenticated/dashboard'
+    | '/_authenticated/vault'
+    | '/_authenticated/mysteries/$id'
+    | '/_authenticated/rabbit-hole/$id'
+    | '/_authenticated/mysteries/'
+    | '/_authenticated/rabbit-hole/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
+  AuthRoute: typeof AuthRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/auth': {
+      id: '/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated': {
+      id: '/_authenticated'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AuthenticatedRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -48,22 +163,77 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated/vault': {
+      id: '/_authenticated/vault'
+      path: '/vault'
+      fullPath: '/vault'
+      preLoaderRoute: typeof AuthenticatedVaultRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/dashboard': {
+      id: '/_authenticated/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof AuthenticatedDashboardRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/rabbit-hole/': {
+      id: '/_authenticated/rabbit-hole/'
+      path: '/rabbit-hole'
+      fullPath: '/rabbit-hole/'
+      preLoaderRoute: typeof AuthenticatedRabbitHoleIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/mysteries/': {
+      id: '/_authenticated/mysteries/'
+      path: '/mysteries'
+      fullPath: '/mysteries/'
+      preLoaderRoute: typeof AuthenticatedMysteriesIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/rabbit-hole/$id': {
+      id: '/_authenticated/rabbit-hole/$id'
+      path: '/rabbit-hole/$id'
+      fullPath: '/rabbit-hole/$id'
+      preLoaderRoute: typeof AuthenticatedRabbitHoleIdRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/mysteries/$id': {
+      id: '/_authenticated/mysteries/$id'
+      path: '/mysteries/$id'
+      fullPath: '/mysteries/$id'
+      preLoaderRoute: typeof AuthenticatedMysteriesIdRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
   }
 }
 
+interface AuthenticatedRouteRouteChildren {
+  AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
+  AuthenticatedVaultRoute: typeof AuthenticatedVaultRoute
+  AuthenticatedMysteriesIdRoute: typeof AuthenticatedMysteriesIdRoute
+  AuthenticatedRabbitHoleIdRoute: typeof AuthenticatedRabbitHoleIdRoute
+  AuthenticatedMysteriesIndexRoute: typeof AuthenticatedMysteriesIndexRoute
+  AuthenticatedRabbitHoleIndexRoute: typeof AuthenticatedRabbitHoleIndexRoute
+}
+
+const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
+  AuthenticatedVaultRoute: AuthenticatedVaultRoute,
+  AuthenticatedMysteriesIdRoute: AuthenticatedMysteriesIdRoute,
+  AuthenticatedRabbitHoleIdRoute: AuthenticatedRabbitHoleIdRoute,
+  AuthenticatedMysteriesIndexRoute: AuthenticatedMysteriesIndexRoute,
+  AuthenticatedRabbitHoleIndexRoute: AuthenticatedRabbitHoleIndexRoute,
+}
+
+const AuthenticatedRouteRouteWithChildren =
+  AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
+  AuthRoute: AuthRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
