@@ -13,6 +13,7 @@ import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedVaultRouteImport } from './routes/_authenticated/vault'
+import { Route as AuthenticatedRealityCheckRouteImport } from './routes/_authenticated/reality-check'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AuthenticatedRabbitHoleIndexRouteImport } from './routes/_authenticated/rabbit-hole.index'
 import { Route as AuthenticatedMysteriesIndexRouteImport } from './routes/_authenticated/mysteries.index'
@@ -38,6 +39,12 @@ const AuthenticatedVaultRoute = AuthenticatedVaultRouteImport.update({
   path: '/vault',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedRealityCheckRoute =
+  AuthenticatedRealityCheckRouteImport.update({
+    id: '/reality-check',
+    path: '/reality-check',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
@@ -72,6 +79,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
+  '/reality-check': typeof AuthenticatedRealityCheckRoute
   '/vault': typeof AuthenticatedVaultRoute
   '/mysteries/$id': typeof AuthenticatedMysteriesIdRoute
   '/rabbit-hole/$id': typeof AuthenticatedRabbitHoleIdRoute
@@ -82,6 +90,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
+  '/reality-check': typeof AuthenticatedRealityCheckRoute
   '/vault': typeof AuthenticatedVaultRoute
   '/mysteries/$id': typeof AuthenticatedMysteriesIdRoute
   '/rabbit-hole/$id': typeof AuthenticatedRabbitHoleIdRoute
@@ -94,6 +103,7 @@ export interface FileRoutesById {
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/auth': typeof AuthRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
+  '/_authenticated/reality-check': typeof AuthenticatedRealityCheckRoute
   '/_authenticated/vault': typeof AuthenticatedVaultRoute
   '/_authenticated/mysteries/$id': typeof AuthenticatedMysteriesIdRoute
   '/_authenticated/rabbit-hole/$id': typeof AuthenticatedRabbitHoleIdRoute
@@ -106,6 +116,7 @@ export interface FileRouteTypes {
     | '/'
     | '/auth'
     | '/dashboard'
+    | '/reality-check'
     | '/vault'
     | '/mysteries/$id'
     | '/rabbit-hole/$id'
@@ -116,6 +127,7 @@ export interface FileRouteTypes {
     | '/'
     | '/auth'
     | '/dashboard'
+    | '/reality-check'
     | '/vault'
     | '/mysteries/$id'
     | '/rabbit-hole/$id'
@@ -127,6 +139,7 @@ export interface FileRouteTypes {
     | '/_authenticated'
     | '/auth'
     | '/_authenticated/dashboard'
+    | '/_authenticated/reality-check'
     | '/_authenticated/vault'
     | '/_authenticated/mysteries/$id'
     | '/_authenticated/rabbit-hole/$id'
@@ -170,6 +183,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedVaultRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/reality-check': {
+      id: '/_authenticated/reality-check'
+      path: '/reality-check'
+      fullPath: '/reality-check'
+      preLoaderRoute: typeof AuthenticatedRealityCheckRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/dashboard': {
       id: '/_authenticated/dashboard'
       path: '/dashboard'
@@ -210,6 +230,7 @@ declare module '@tanstack/react-router' {
 
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
+  AuthenticatedRealityCheckRoute: typeof AuthenticatedRealityCheckRoute
   AuthenticatedVaultRoute: typeof AuthenticatedVaultRoute
   AuthenticatedMysteriesIdRoute: typeof AuthenticatedMysteriesIdRoute
   AuthenticatedRabbitHoleIdRoute: typeof AuthenticatedRabbitHoleIdRoute
@@ -219,6 +240,7 @@ interface AuthenticatedRouteRouteChildren {
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
+  AuthenticatedRealityCheckRoute: AuthenticatedRealityCheckRoute,
   AuthenticatedVaultRoute: AuthenticatedVaultRoute,
   AuthenticatedMysteriesIdRoute: AuthenticatedMysteriesIdRoute,
   AuthenticatedRabbitHoleIdRoute: AuthenticatedRabbitHoleIdRoute,
@@ -237,3 +259,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
