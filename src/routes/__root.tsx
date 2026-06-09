@@ -81,10 +81,14 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { title: "The Infinite Vault — Classified Knowledge Engine" },
       { name: "description", content: "An AI-powered intelligence archive of mysteries, rabbit holes, and secret files. Replace mindless scrolling with addictive curiosity." },
       { name: "author", content: "The Vault" },
-      { property: "og:title", content: "The Infinite Vault" },
-      { property: "og:description", content: "Mysteries. Rabbit holes. Classified files. Enter the archive." },
+      { property: "og:title", content: "The Infinite Vault — Classified Knowledge Engine" },
+      { property: "og:description", content: "An AI-powered intelligence archive of mysteries, rabbit holes, and secret files. Replace mindless scrolling with addictive curiosity." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
+      { name: "twitter:title", content: "The Infinite Vault — Classified Knowledge Engine" },
+      { name: "twitter:description", content: "An AI-powered intelligence archive of mysteries, rabbit holes, and secret files. Replace mindless scrolling with addictive curiosity." },
+      { property: "og:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/d0fd3182-71a1-4af7-a797-cd3da878c421" },
+      { name: "twitter:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/d0fd3182-71a1-4af7-a797-cd3da878c421" },
     ],
     links: [
       {
