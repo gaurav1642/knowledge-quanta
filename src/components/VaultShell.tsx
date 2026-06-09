@@ -1,6 +1,6 @@
 import { Link, useRouter, useRouterState } from "@tanstack/react-router";
 import { ReactNode } from "react";
-import { Eye, Brain, FileLock2, LayoutDashboard, LogOut, Search } from "lucide-react";
+import { Eye, Brain, FileLock2, LayoutDashboard, LogOut, Search, ShieldCheck } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { ParticleField } from "./ParticleField";
 
@@ -9,6 +9,7 @@ const nav = [
   { to: "/mysteries", label: "Mysteries", icon: Search },
   { to: "/rabbit-hole", label: "Rabbit Hole", icon: Brain },
   { to: "/vault", label: "Vault Archive", icon: FileLock2 },
+  { to: "/reality-check", label: "Reality Check", icon: ShieldCheck },
 ] as const;
 
 export function VaultShell({ children }: { children: ReactNode }) {
