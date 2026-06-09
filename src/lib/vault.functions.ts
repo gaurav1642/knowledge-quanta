@@ -240,3 +240,70 @@ export const listSecretFiles = createServerFn({ method: "GET" })
     const { data } = await supabase.from("secret_files").select("*").eq("user_id", userId).order("created_at", { ascending: false });
     return data ?? [];
   });
+
+// ---------- REALITY CHECK ----------
+export const runRealityCheck = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d: unknown) => z.object({
+    plan: z.string().min(10).max(2000),
+    context: z.string().max(1000).optional().default(""),
+  }).parse(d))
+  .handler(async ({ data, context }) => {
+    const { supabase, userId } = context as unknown as { supabase: any; userId: string };
+    const { callAIJson } = await import("@/lib/vault-ai.server");
+    const json = await callAIJson<{
+      success_score: number; risk_score: number; confidence_score: number;
+      verdict: string; summary: string;
+      strengths: { title: string; detail: string }[];
+      risks: { title: string; detail: string; severity: "low" | "medium" | "high" }[];
+      blind_spots: { title: string; detail: string }[];
+      suggestions: { title: string; detail: string }[];
+      next_actions: string[];
+    }>({
+      temperature: 0.4,
+      messages: [
+        { role: "system", content: `You are the Vault's Reality Check AI: a brutally honest, classified-intelligence analyst. Stress-test the user's plan. Return STRICT JSON ONLY with this shape:
+{
+  "success_score": int 0-100 (probability plan achieves its stated goal),
+  "risk_score": int 0-100 (overall downside / failure exposure),
+  "confidence_score": int 0-100 (how confident YOU are in this assessment),
+  "verdict": short label like "Proceed with caution" | "High risk" | "Solid plan" | "Reconsider" | "Greenlight",
+  "summary": one tight sentence,
+  "strengths": array of 3 objects {title, detail},
+  "risks": array of 3-5 objects {title, detail, severity: "low"|"medium"|"high"},
+  "blind_spots": array of 3 objects {title, detail} (things the user is NOT seeing),
+  "suggestions": array of 3 objects {title, detail} (concrete improvements),
+  "next_actions": array of 3-5 short imperative strings
+}
+Be specific, critical, no fluff, no preamble.` },
+        { role: "user", content: `PLAN:\n${data.plan}\n\nCONTEXT:\n${data.context || "(none)"}` },
+      ],
+    });
+    const clamp = (n: any) => Math.max(0, Math.min(100, Math.round(Number(n) || 0)));
+    const { data: row, error } = await supabase.from("reality_checks").insert({
+      user_id: userId,
+      plan: data.plan,
+      context: data.context || null,
+      success_score: clamp(json.success_score),
+      risk_score: clamp(json.risk_score),
+      confidence_score: clamp(json.confidence_score),
+      verdict: String(json.verdict ?? "").slice(0, 120),
+      summary: String(json.summary ?? "").slice(0, 600),
+      strengths: json.strengths ?? [],
+      risks: json.risks ?? [],
+      blind_spots: json.blind_spots ?? [],
+      suggestions: json.suggestions ?? [],
+      next_actions: json.next_actions ?? [],
+    }).select("*").single();
+    if (error) throw new Error(error.message);
+    await awardXp(supabase, userId, "reality_check", { reality_checks_completed: 1 });
+    return row;
+  });
+
+export const listRealityChecks = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }) => {
+    const { supabase, userId } = context as unknown as { supabase: any; userId: string };
+    const { data } = await supabase.from("reality_checks").select("*").eq("user_id", userId).order("created_at", { ascending: false }).limit(20);
+    return data ?? [];
+  });

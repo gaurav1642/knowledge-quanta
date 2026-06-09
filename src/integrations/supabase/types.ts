@@ -143,6 +143,63 @@ export type Database = {
         }
         Relationships: []
       }
+      reality_checks: {
+        Row: {
+          blind_spots: Json
+          confidence_score: number
+          context: string | null
+          created_at: string
+          id: string
+          next_actions: Json
+          plan: string
+          risk_score: number
+          risks: Json
+          strengths: Json
+          success_score: number
+          suggestions: Json
+          summary: string
+          updated_at: string
+          user_id: string
+          verdict: string
+        }
+        Insert: {
+          blind_spots?: Json
+          confidence_score?: number
+          context?: string | null
+          created_at?: string
+          id?: string
+          next_actions?: Json
+          plan: string
+          risk_score?: number
+          risks?: Json
+          strengths?: Json
+          success_score?: number
+          suggestions?: Json
+          summary?: string
+          updated_at?: string
+          user_id: string
+          verdict?: string
+        }
+        Update: {
+          blind_spots?: Json
+          confidence_score?: number
+          context?: string | null
+          created_at?: string
+          id?: string
+          next_actions?: Json
+          plan?: string
+          risk_score?: number
+          risks?: Json
+          strengths?: Json
+          success_score?: number
+          suggestions?: Json
+          summary?: string
+          updated_at?: string
+          user_id?: string
+          verdict?: string
+        }
+        Relationships: []
+      }
       secret_files: {
         Row: {
           category: string
